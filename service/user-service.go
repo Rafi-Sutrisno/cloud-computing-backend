@@ -15,6 +15,7 @@ type UserService interface {
 	// functional
 	CreateUser(ctx context.Context, userDTO dto.CreateUserDTO) (entity.User, error)
 	GetAllUser(ctx context.Context) ([]entity.User, error)
+	DeleteUser(ctx context.Context, id uint64) error
 }
 
 func NewUserService(ur repository.UserRepository) UserService {
@@ -35,4 +36,8 @@ func (us *userService) CreateUser(ctx context.Context, userDTO dto.CreateUserDTO
 
 func (us *userService) GetAllUser(ctx context.Context) ([]entity.User, error) {
 	return us.userRepository.GetAllUser(ctx)
+}
+
+func (us *userService) DeleteUser(ctx context.Context, id uint64) error {
+	return us.userRepository.DeleteUser(ctx, id)
 }
