@@ -23,6 +23,7 @@ func main() {
 	db := config.SetupDatabaseConnection()
 
 	jwtService := service.NewJWTService()
+
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
 	userController := controller.NewUserController(userService, jwtService)
