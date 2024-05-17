@@ -32,12 +32,16 @@ func main() {
 	diseaseService := service.NewDiseaseService(diseaseRepository)
 	diseaseController := controller.NewDiseaseController(diseaseService, jwtService)
 
+	predictionRepository := repository.NewPredictionRepository(db)
+	predictionService := service.NewPredictionService(predictionRepository)
+	predictionController := controller.NewPredictionController(predictionService, jwtService)
+
 	defer config.CloseDatabaseConnection(db)
 
 	server := gin.Default()
 	server.Use(middleware.CORSMiddleware())
 
-	routes.Routes(server, userController, diseaseController, jwtService)
+	routes.Routes(server, userController, diseaseController, predictionController, jwtService)
 
 	port := os.Getenv("PORT")
 	if port == "" {
