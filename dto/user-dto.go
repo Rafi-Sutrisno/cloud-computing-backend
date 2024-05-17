@@ -8,7 +8,8 @@ type CreateUserDTO struct {
 }
 
 type LoginDTO struct {
-	Name string `json:"name" binding:"required"`
+	Email string `json:"email" binding:"required"`
+	Pass  string `json:"pass" binding:"required"`
 }
 
 type PredictionDTO struct {

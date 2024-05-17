@@ -16,6 +16,7 @@ type UserRepository interface {
 	AddUser(ctx context.Context, user entity.User) (entity.User, error)
 	GetAllUser(ctx context.Context) ([]entity.User, error)
 	DeleteUser(ctx context.Context, id string) error
+	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
@@ -29,6 +30,14 @@ func (db *userConnection) AddUser(ctx context.Context, user entity.User) (entity
 		return entity.User{}, err
 	}
 
+	return user, nil
+}
+
+func (db *userConnection) GetUserByEmail(ctx context.Context, email string) (entity.User, error) {
+	var user entity.User
+	if err := db.connection.Where("email = ?", email).Take(&user).Error; err != nil {
+		return entity.User{}, err
+	}
 	return user, nil
 }
 
