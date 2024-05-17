@@ -23,16 +23,21 @@ func main() {
 	db := config.SetupDatabaseConnection()
 
 	jwtService := service.NewJWTService()
+
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
 	userController := controller.NewUserController(userService, jwtService)
+
+	diseaseRepository := repository.NewDiseaseRepository(db)
+	diseaseService := service.NewDiseaseService(diseaseRepository)
+	diseaseController := controller.NewDiseaseController(diseaseService, jwtService)
 
 	defer config.CloseDatabaseConnection(db)
 
 	server := gin.Default()
 	server.Use(middleware.CORSMiddleware())
 
-	routes.Routes(server, userController, jwtService)
+	routes.Routes(server, userController, diseaseController, jwtService)
 
 	port := os.Getenv("PORT")
 	if port == "" {
