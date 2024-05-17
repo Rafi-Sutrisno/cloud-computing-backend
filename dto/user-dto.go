@@ -11,7 +11,3 @@ type LoginDTO struct {
 	Email string `json:"email" binding:"required"`
 	Pass  string `json:"pass" binding:"required"`
 }
-
-type PredictionDTO struct {
-	Prediction int `json:"prediction"`
-}
