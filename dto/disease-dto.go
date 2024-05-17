@@ -1,7 +1,6 @@
-package entity
+package dto
 
-type Disease struct {
-	ID          uint64 `json:"id" gorm:"primaryKey"`
+type CreateDiseaseDTO struct {
 	Name        string `json:"name" binding:"required"`
 	Description string `json:"description" binding:"required"`
 }
