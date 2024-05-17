@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -14,7 +13,7 @@ type JWTService interface {
 	GenerateToken(id string, name string) string
 	GenerateTokenString(id string, name string) string
 	ValidateToken(token string) (*jwt.Token, error)
-	GetUserIDByToken(token string) (uint64, error)
+	GetUserIDByToken(token string) (string, error)
 	GetRoleByToken(token string) (string, error)
 }
 
@@ -89,15 +88,14 @@ func (j *jwtService) ValidateToken(token string) (*jwt.Token, error) {
 	})
 }
 
-func (j *jwtService) GetUserIDByToken(token string) (uint64, error) {
+func (j *jwtService) GetUserIDByToken(token string) (string, error) {
 	t_Token, err := j.ValidateToken(token)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 	claims := t_Token.Claims.(jwt.MapClaims)
 	id := fmt.Sprintf("%v", claims["id"])
-	userID, _ := strconv.ParseUint(id, 10, 64)
-	return userID, nil
+	return id, nil
 }
 
 func (j *jwtService) GetRoleByToken(token string) (string, error) {
