@@ -7,13 +7,11 @@ import (
 	"mods/service"
 	"mods/utils"
 	"net/http"
-	"strconv"
 
 	// "os/exec"
 	// "strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 )
 
 type userController struct {
@@ -38,7 +36,7 @@ func NewUserController(us service.UserService, jwt service.JWTService) UserContr
 func (uc *userController) AddUser(ctx *gin.Context) {
 
 	var user dto.CreateUserDTO
-	if tx := ctx.ShouldBindWith(&user, binding.FormMultipart); tx != nil {
+	if tx := ctx.ShouldBind(&user); tx != nil {
 
 		res2 := ctx.Request
 		fmt.Println(res2)
@@ -71,14 +69,9 @@ func (uc *userController) GetAllUser(ctx *gin.Context) {
 }
 
 func (uc *userController) DeleteUser(ctx *gin.Context) {
-	Userid, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
-	if err != nil {
-		response := utils.BuildErrorResponse("gagal memproses request", http.StatusBadRequest)
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
-		return
-	}
+	Userid := ctx.Param("id")
 
-	err = uc.userService.DeleteUser(ctx, Userid)
+	err := uc.userService.DeleteUser(ctx, Userid)
 	if err != nil {
 		res := utils.BuildErrorResponse("failed to get user id info", http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)

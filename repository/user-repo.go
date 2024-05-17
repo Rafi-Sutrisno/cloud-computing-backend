@@ -15,7 +15,7 @@ type UserRepository interface {
 	// functional
 	AddUser(ctx context.Context, user entity.User) (entity.User, error)
 	GetAllUser(ctx context.Context) ([]entity.User, error)
-	DeleteUser(ctx context.Context, id uint64) error
+	DeleteUser(ctx context.Context, id string) error
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
@@ -44,9 +44,9 @@ func (db *userConnection) GetAllUser(ctx context.Context) ([]entity.User, error)
 	return listUser, nil
 }
 
-func (db *userConnection) DeleteUser(ctx context.Context, id uint64) error {
+func (db *userConnection) DeleteUser(ctx context.Context, id string) error {
 	var user entity.User
-	tx := db.connection.Delete(&user, id)
+	tx := db.connection.Where("U_Id = ?", id).Delete(&user)
 
 	if tx.Error != nil {
 		return tx.Error

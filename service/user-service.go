@@ -5,7 +5,8 @@ import (
 	"mods/dto"
 	"mods/entity"
 	"mods/repository"
-	"path/filepath"
+
+	"github.com/google/uuid"
 )
 
 type userService struct {
@@ -16,7 +17,7 @@ type UserService interface {
 	// functional
 	CreateUser(ctx context.Context, userDTO dto.CreateUserDTO) (entity.User, error)
 	GetAllUser(ctx context.Context) ([]entity.User, error)
-	DeleteUser(ctx context.Context, id uint64) error
+	DeleteUser(ctx context.Context, id string) error
 }
 
 func NewUserService(ur repository.UserRepository) UserService {
@@ -26,11 +27,16 @@ func NewUserService(ur repository.UserRepository) UserService {
 }
 
 func (us *userService) CreateUser(ctx context.Context, userDTO dto.CreateUserDTO) (entity.User, error) {
-	// filename := filepath.Base(userDTO.File.Filename)
+
+	id := uuid.NewString()
+
 	newUser := entity.User{
-		Name:    userDTO.User.Name,
-		Email:   userDTO.User.Email,
-		Profile: filepath.Base(userDTO.Profile.Filename),
+		U_Id:   id,
+		Name:   userDTO.Name,
+		Email:  userDTO.Email,
+		Notelp: userDTO.Notelp,
+		Pass:   userDTO.Pass,
+		Role:   "User",
 	}
 
 	return us.userRepository.AddUser(ctx, newUser)
@@ -40,6 +46,6 @@ func (us *userService) GetAllUser(ctx context.Context) ([]entity.User, error) {
 	return us.userRepository.GetAllUser(ctx)
 }
 
-func (us *userService) DeleteUser(ctx context.Context, id uint64) error {
+func (us *userService) DeleteUser(ctx context.Context, id string) error {
 	return us.userRepository.DeleteUser(ctx, id)
 }

@@ -1,8 +1,10 @@
 package entity
 
 type User struct {
-	ID      uint64 `json:"id" gorm:"primaryKey"`
-	Name    string `json:"name" binding:"required"`
-	Email   string `json:"email" binding:"required"`
-	Profile string `json:"profile" binding:"required"`
+	U_Id   string `json:"id" gorm:primaryKey`
+	Name   string `json:"name" binding:"required"`
+	Email  string `json:"email" binding:"required"`
+	Notelp string `json:"notelp" binding:"required"`
+	Pass   string `json:"pass" binding:"required"`
+	Role   string `json:"role" binding:"required"`
 }
