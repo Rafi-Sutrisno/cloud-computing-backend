@@ -7,13 +7,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(router *gin.Engine, carController controller.UserController, jwtService service.JWTService) {
+func Routes(router *gin.Engine, userController controller.UserController, diseaseController controller.DiseaseController, jwtService service.JWTService) {
 	userPublic := router.Group("/user")
 	{
 		// public can access
-		userPublic.POST("/add", carController.AddUser)
-		userPublic.GET("", carController.GetAllUser)
-		userPublic.DELETE("/:id", carController.DeleteUser)
+		userPublic.POST("/add", userController.AddUser)
+		userPublic.GET("", userController.GetAllUser)
+		userPublic.DELETE("/:id", userController.DeleteUser)
+	}
+
+	diseasePublic := router.Group("/disease")
+	{
+		diseasePublic.POST("/add", diseaseController.AddDisease)
+		diseasePublic.GET("", diseaseController.GetAllDisease)
+		diseasePublic.DELETE("/:id", diseaseController.DeleteDisease)
 	}
 
 }
