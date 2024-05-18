@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"errors"
+	"mods/dto"
 	"mods/entity"
 
 	"gorm.io/gorm"
@@ -17,6 +19,7 @@ type UserRepository interface {
 	GetAllUser(ctx context.Context) ([]entity.User, error)
 	DeleteUser(ctx context.Context, id string) error
 	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
+	UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error)
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
@@ -62,4 +65,22 @@ func (db *userConnection) DeleteUser(ctx context.Context, id string) error {
 	}
 
 	return nil
+}
+
+func (uc *userConnection) UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error) {
+	var user entity.User
+
+	getUser := uc.connection.Where("id = ?", userID).Take(&user)
+	if getUser.Error != nil {
+		return entity.User{}, errors.New("invalid user id")
+	}
+
+	if tx := uc.connection.Model(&user).Updates(map[string]interface{}{"name": updateDTO.Name, "notelp": updateDTO.Notelp}); tx != nil {
+		return entity.User{}, errors.New("failed to update")
+	}
+
+	updatedUser := uc.connection.Where("id = ?", userID).Take(&user)
+	_ = updatedUser
+
+	return user, nil
 }

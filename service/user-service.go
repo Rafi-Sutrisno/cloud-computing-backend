@@ -22,6 +22,7 @@ type UserService interface {
 	IsDuplicateEmail(ctx context.Context, email string) (bool, error)
 	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
 	VerifyCredential(ctx context.Context, email string, pass string) (bool, error)
+	UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error)
 }
 
 func NewUserService(ur repository.UserRepository) UserService {
@@ -69,6 +70,10 @@ func (us *userService) GetAllUser(ctx context.Context) ([]entity.User, error) {
 
 func (us *userService) DeleteUser(ctx context.Context, id string) error {
 	return us.userRepository.DeleteUser(ctx, id)
+}
+
+func (us *userService) UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error) {
+	return us.userRepository.UpdateUser(ctx, updateDTO, userID)
 }
 
 func (us *userService) VerifyCredential(ctx context.Context, email string, pass string) (bool, error) {
