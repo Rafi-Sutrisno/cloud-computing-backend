@@ -19,8 +19,8 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 	userPrivate := router.Group("/user").Use(middleware.Authenticate())
 	{
 		userPrivate.GET("", userController.GetAllUser)
-		inscurePublic.DELETE("/:id", userController.DeleteUser)
-		inscurePublic.PUT("/update", userController.UpdateUser)
+		userPrivate.DELETE("/:id", userController.DeleteUser)
+		userPrivate.PUT("/update", userController.UpdateUser)
 	}
 
 	diseasePublic := router.Group("/disease")
@@ -33,6 +33,8 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 	predictionPublic := router.Group("/prediction").Use(middleware.Authenticate())
 	{
 		predictionPublic.POST("", predictionController.AddPrediction)
+		predictionPublic.GET("/list", predictionController.GetPredictionByUserID)
+		predictionPublic.GET("/:P_id", predictionController.GetPredictionByPredictionID)
 	}
 
 }

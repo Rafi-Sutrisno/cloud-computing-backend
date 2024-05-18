@@ -14,5 +14,5 @@ type LoginDTO struct {
 
 type UpdateUserDTO struct {
 	Name   string `json:"name" binding:"required"`
-	Notelp string `json:"email" binding:"required"`
+	Notelp string `json:"Notelp" binding:"required"`
 }
