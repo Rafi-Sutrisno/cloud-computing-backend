@@ -34,6 +34,8 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 	predictionPublic := router.Group("/prediction").Use(middleware.Authenticate())
 	{
 		predictionPublic.POST("", predictionController.AddPrediction)
+		predictionPublic.GET("/list", predictionController.GetPredictionByUserID)
+		predictionPublic.GET("/:P_id", predictionController.GetPredictionByPredictionID)
 	}
 
 }

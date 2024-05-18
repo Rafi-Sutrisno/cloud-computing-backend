@@ -33,7 +33,7 @@ func (pc *predictionConnection) AddPrediction(ctx context.Context, prediction en
 func (pc *predictionConnection) GetPredictionByUserID(ctx context.Context, UserID string) ([]entity.Prediction, error) {
 	var prediciton []entity.Prediction
 
-	if err := pc.connection.Where("UserID = ?", UserID).Take(&prediciton).Error; err != nil {
+	if err := pc.connection.Where("user_id = ?", UserID).Find(&prediciton).Error; err != nil {
 		return nil, err
 	}
 
