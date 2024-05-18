@@ -7,6 +7,7 @@ import (
 	"mods/service"
 	"mods/utils"
 	"net/http"
+	"strings"
 
 	// "os/exec"
 	// "strconv"
@@ -25,6 +26,7 @@ type UserController interface {
 	GetAllUser(ctx *gin.Context)
 	DeleteUser(ctx *gin.Context)
 	UserLoginToken(ctx *gin.Context)
+	UpdateUser(ctx *gin.Context)
 }
 
 func NewUserController(us service.UserService, jwt service.JWTService) UserController {
@@ -32,6 +34,13 @@ func NewUserController(us service.UserService, jwt service.JWTService) UserContr
 		userService: us,
 		jwtService:  jwt,
 	}
+}
+
+func (uc *userController) RetrieveID(ctx *gin.Context) (string, error) {
+	token := ctx.GetHeader("Authorization")
+	token = strings.Replace(token, "Bearer ", "", -1)
+
+	return uc.jwtService.GetUserIDByToken(token)
 }
 
 func (uc *userController) AddUser(ctx *gin.Context) {
@@ -116,4 +125,30 @@ func (uc *userController) UserLoginToken(ctx *gin.Context) {
 	fmt.Print(token)
 	res := utils.BuildResponse("Successful login", http.StatusOK, token)
 	ctx.JSON(http.StatusOK, res)
+}
+
+func (uc *userController) UpdateUser(ctx *gin.Context) {
+	var updateDTO dto.UpdateUserDTO
+	if tx := ctx.ShouldBind(&updateDTO); tx != nil {
+		res := utils.BuildErrorResponse("Failed to process request", http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	idUser, err := uc.RetrieveID(ctx)
+	if err != nil {
+		response := utils.BuildErrorResponse("gagal memproses request", http.StatusBadRequest)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
+	}
+
+	res, err := uc.userService.UpdateUser(ctx, updateDTO, idUser)
+	if err != nil {
+		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	response := utils.BuildResponse("berhasil update user", http.StatusOK, res)
+	ctx.JSON(http.StatusCreated, response)
 }
