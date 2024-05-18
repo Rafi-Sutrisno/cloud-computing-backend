@@ -1,14 +1,13 @@
 package service
 
 import (
-	"context"
 	"mods/dto"
 	"mods/entity"
 	"mods/repository"
 	"mods/utils"
-	"path/filepath"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
@@ -17,7 +16,7 @@ type predictionService struct {
 }
 
 type PredictionService interface {
-	CreatePrediction(ctx context.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error)
+	CreatePrediction(ctx *gin.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error)
 }
 
 func NewPredictionService(pr repository.PredictionRepository) PredictionService {
@@ -26,24 +25,23 @@ func NewPredictionService(pr repository.PredictionRepository) PredictionService 
 	}
 }
 
-func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error) {
+func (ps *predictionService) CreatePrediction(ctx *gin.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error) {
 	id := uuid.NewString()
 	imageFile := predictionDTO.File
 
-	err := utils.UploadToBucket(imageFile)
+	img_uuid, err := utils.UploadToBucket(imageFile)
 	if err != nil {
 		return entity.Prediction{}, err
 	}
 
-	imageName := filepath.Base(imageFile.Filename)
-	result, err := utils.PredictionAPI(imageName)
+	result, err := utils.PredictionAPI(img_uuid)
 	if err != nil {
 		return entity.Prediction{}, err
 	}
 
 	newPrediction := entity.Prediction{
 		Pr_ID:          id,
-		Gambar:         imageName,
+		Gambar:         img_uuid,
 		Hasil_Prediksi: result,
 		Tgl:            time.Now(),
 		UserID:         userID,
