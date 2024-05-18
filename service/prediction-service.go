@@ -8,7 +8,6 @@ import (
 	"mods/utils"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
@@ -19,7 +18,7 @@ type predictionService struct {
 type PredictionService interface {
 	CreatePrediction(ctx context.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error)
 	GetPredictionByUserID(ctx context.Context, UserID string) ([]entity.Prediction, error)
-	GetPredictionByPredictionID(ctx context.Context, PredicitonID string) (entity.Prediction, error)
+	GetPredictionByPredictionID(ctx context.Context, PredictionID string) (entity.Prediction, error)
 }
 
 func NewPredictionService(pr repository.PredictionRepository) PredictionService {
@@ -28,7 +27,7 @@ func NewPredictionService(pr repository.PredictionRepository) PredictionService 
 	}
 }
 
-func (ps *predictionService) CreatePrediction(ctx *gin.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error) {
+func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error) {
 	id := uuid.NewString()
 	imageFile := predictionDTO.File
 
@@ -57,6 +56,6 @@ func (ps *predictionService) GetPredictionByUserID(ctx context.Context, UserID s
 	return ps.predictionRepository.GetPredictionByUserID(ctx, UserID)
 }
 
-func (ps *predictionService) GetPredictionByPredictionID(ctx context.Context, PredicitonID string) (entity.Prediction, error) {
-	return ps.predictionRepository.GetPredictionByPredictionID(ctx, PredicitonID)
+func (ps *predictionService) GetPredictionByPredictionID(ctx context.Context, PredictionID string) (entity.Prediction, error) {
+	return ps.predictionRepository.GetPredictionByPredictionID(ctx, PredictionID)
 }
