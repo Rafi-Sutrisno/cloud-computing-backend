@@ -8,6 +8,7 @@ import (
 	"mods/utils"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
@@ -27,7 +28,7 @@ func NewPredictionService(pr repository.PredictionRepository) PredictionService 
 	}
 }
 
-func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error) {
+func (ps *predictionService) CreatePrediction(ctx *gin.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error) {
 	id := uuid.NewString()
 	imageFile := predictionDTO.File
 
