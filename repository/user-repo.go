@@ -69,19 +69,15 @@ func (db *userConnection) DeleteUser(ctx context.Context, id string) error {
 
 func (uc *userConnection) UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error) {
 	var user entity.User
-	var updatedUser entity.User
 
 	getUser := uc.connection.Where("u_id = ?", userID).Take(&user)
 	if getUser.Error != nil {
 		return entity.User{}, errors.New("invalid user id")
 	}
 
-	if tx := uc.connection.Model(&user).Updates(map[string]interface{}{"name": updateDTO.Name, "notelp": updateDTO.Notelp}); tx != nil {
-		return entity.User{}, tx.Error
+	if tx := uc.connection.Model(&user).Updates(map[string]interface{}{"name": updateDTO.Name, "notelp": updateDTO.Notelp}).Error; tx != nil {
+		return entity.User{}, tx
 	}
 
-	tx := uc.connection.Where("u_id = ?", userID).Take(&updatedUser)
-	_ = tx
-
-	return updatedUser, nil
+	return user, nil
 }
