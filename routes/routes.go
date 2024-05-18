@@ -19,8 +19,8 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 	userPrivate := router.Group("/user").Use(middleware.Authenticate())
 	{
 		userPrivate.GET("", userController.GetAllUser)
-		inscurePublic.DELETE("/:id", userController.DeleteUser)
-		inscurePublic.PUT("/update", userController.UpdateUser)
+		userPrivate.DELETE("/:id", userController.DeleteUser)
+		userPrivate.PUT("/update", userController.UpdateUser)
 	}
 
 	diseasePublic := router.Group("/disease")
