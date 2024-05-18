@@ -69,6 +69,7 @@ func (db *userConnection) DeleteUser(ctx context.Context, id string) error {
 
 func (uc *userConnection) UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error) {
 	var user entity.User
+	var updatedUser entity.User
 
 	getUser := uc.connection.Where("u_id = ?", userID).Take(&user)
 	if getUser.Error != nil {
@@ -79,8 +80,8 @@ func (uc *userConnection) UpdateUser(ctx context.Context, updateDTO dto.UpdateUs
 		return entity.User{}, tx.Error
 	}
 
-	updatedUser := uc.connection.Where("u_id = ?", userID).Take(&user)
-	_ = updatedUser
+	tx := uc.connection.Where("u_id = ?", userID).Take(&updatedUser)
+	_ = tx
 
-	return user, nil
+	return updatedUser, nil
 }
