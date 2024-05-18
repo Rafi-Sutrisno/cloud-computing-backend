@@ -2,19 +2,25 @@ package routes
 
 import (
 	"mods/controller"
+	"mods/middleware"
 	"mods/service"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Routes(router *gin.Engine, userController controller.UserController, diseaseController controller.DiseaseController, predictionController controller.PredictionController, jwtService service.JWTService) {
-	userPublic := router.Group("/user")
+	inscurePublic := router.Group("/inscure")
 	{
 		// public can access
-		userPublic.POST("/add", userController.AddUser)
-		userPublic.GET("", userController.GetAllUser)
-		userPublic.DELETE("/:id", userController.DeleteUser)
-		userPublic.POST("/login", userController.UserLoginToken)
+		inscurePublic.POST("/add", userController.AddUser)
+		inscurePublic.POST("/login", userController.UserLoginToken)
+	}
+
+	userPrivate := router.Group("/user").Use(middleware.Authenticate())
+	{
+		userPrivate.GET("", userController.GetAllUser)
+		inscurePublic.DELETE("/:id", userController.DeleteUser)
+		inscurePublic.PUT("/update", userController.UpdateUser)
 	}
 
 	diseasePublic := router.Group("/disease")
@@ -24,7 +30,7 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 		diseasePublic.DELETE("/:id", diseaseController.DeleteDisease)
 	}
 
-	predictionPublic := router.Group("/prediction")
+	predictionPublic := router.Group("/prediction").Use(middleware.Authenticate())
 	{
 		predictionPublic.POST("", predictionController.AddPrediction)
 	}
