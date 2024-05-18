@@ -17,6 +17,8 @@ type predictionService struct {
 
 type PredictionService interface {
 	CreatePrediction(ctx context.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error)
+	GetPredictionByUserID(ctx context.Context, UserID string) ([]entity.Prediction, error)
+	GetPredictionByPredictionID(ctx context.Context, PredicitonID string) (entity.Prediction, error)
 }
 
 func NewPredictionService(pr repository.PredictionRepository) PredictionService {
@@ -48,4 +50,12 @@ func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO
 	}
 
 	return ps.predictionRepository.AddPrediction(ctx, newPrediction)
+}
+
+func (ps *predictionService) GetPredictionByUserID(ctx context.Context, UserID string) ([]entity.Prediction, error) {
+	return ps.predictionRepository.GetPredictionByUserID(ctx, UserID)
+}
+
+func (ps *predictionService) GetPredictionByPredictionID(ctx context.Context, PredicitonID string) (entity.Prediction, error) {
+	return ps.predictionRepository.GetPredictionByPredictionID(ctx, PredicitonID)
 }
