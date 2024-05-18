@@ -16,6 +16,7 @@ type DiseaseRepository interface {
 	AddDisease(ctx context.Context, disease entity.Disease) (entity.Disease, error)
 	GetAllDisease(ctx context.Context) ([]entity.Disease, error)
 	DeleteDisease(ctx context.Context, id uint64) error
+	GetDiseaseByID(ctx context.Context, id uint64) (entity.Disease, error)
 }
 
 func NewDiseaseRepository(db *gorm.DB) DiseaseRepository {
@@ -53,4 +54,12 @@ func (db *diseaseConnection) DeleteDisease(ctx context.Context, id uint64) error
 	}
 
 	return nil
+}
+
+func (dc *diseaseConnection) GetDiseaseByID(ctx context.Context, id uint64) (entity.Disease, error) {
+	var disease entity.Disease
+	if err := dc.connection.Where("id = ?", id).Take(&disease).Error; err != nil {
+		return entity.Disease{}, err
+	}
+	return disease, nil
 }
