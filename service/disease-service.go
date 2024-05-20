@@ -16,6 +16,7 @@ type DiseaseService interface {
 	CreateDisease(ctx context.Context, diseaseDTO dto.CreateDiseaseDTO) (entity.Disease, error)
 	GetAllDisease(ctx context.Context) ([]entity.Disease, error)
 	DeleteDisease(ctx context.Context, id uint64) error
+	GetDiseaseByID(ctx context.Context, id uint64) (entity.Disease, error)
 }
 
 func NewDiseaseService(dr repository.DiseaseRepository) DiseaseService {
@@ -40,4 +41,8 @@ func (ds *diseaseService) GetAllDisease(ctx context.Context) ([]entity.Disease, 
 
 func (ds *diseaseService) DeleteDisease(ctx context.Context, id uint64) error {
 	return ds.diseaseRepository.DeleteDisease(ctx, id)
+}
+
+func (ds *diseaseService) GetDiseaseByID(ctx context.Context, id uint64) (entity.Disease, error) {
+	return ds.diseaseRepository.GetDiseaseByID(ctx, id)
 }
