@@ -35,7 +35,7 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 	{
 		predictionPublic.POST("", predictionController.AddPrediction)
 		predictionPublic.GET("/list", predictionController.GetPredictionByUserID)
-		predictionPublic.GET("/:P_id", predictionController.GetPredictionByPredictionID)
+		predictionPublic.GET("/:p_id", predictionController.GetPredictionByPredictionID)
 	}
 
 }
