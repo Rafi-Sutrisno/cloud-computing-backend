@@ -23,6 +23,7 @@ type UserService interface {
 	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
 	VerifyCredential(ctx context.Context, email string, pass string) (bool, error)
 	UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error)
+	GetMe(ctx context.Context, id string) (entity.User, error)
 }
 
 func NewUserService(ur repository.UserRepository) UserService {
@@ -91,4 +92,8 @@ func (us *userService) VerifyCredential(ctx context.Context, email string, pass 
 		return true, nil
 	}
 	return false, nil
+}
+
+func (us *userService) GetMe(ctx context.Context, id string) (entity.User, error) {
+	return us.userRepository.Me(ctx, id)
 }

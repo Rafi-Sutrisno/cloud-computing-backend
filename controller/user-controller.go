@@ -27,6 +27,7 @@ type UserController interface {
 	DeleteUser(ctx *gin.Context)
 	UserLoginToken(ctx *gin.Context)
 	UpdateUser(ctx *gin.Context)
+	Me(ctx *gin.Context)
 }
 
 func NewUserController(us service.UserService, jwt service.JWTService) UserController {
@@ -41,6 +42,25 @@ func (uc *userController) RetrieveID(ctx *gin.Context) (string, error) {
 	token = strings.Replace(token, "Bearer ", "", -1)
 
 	return uc.jwtService.GetUserIDByToken(token)
+}
+
+func (uc *userController) Me(ctx *gin.Context){
+	id, err := uc.RetrieveID(ctx)
+	if err != nil {
+		response := utils.BuildErrorResponse("failed to process request", http.StatusBadRequest)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
+	}
+
+	res, err := uc.userService.GetMe(ctx, id)
+	if err != nil {
+		res := utils.BuildErrorResponse("failed to get profile", http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+	
+	response := utils.BuildResponse("success to get profile", http.StatusOK, res)
+	ctx.JSON(http.StatusOK, response)
 }
 
 func (uc *userController) AddUser(ctx *gin.Context) {

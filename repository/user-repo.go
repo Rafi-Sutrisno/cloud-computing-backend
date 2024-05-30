@@ -20,6 +20,7 @@ type UserRepository interface {
 	DeleteUser(ctx context.Context, id string) error
 	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
 	UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error)
+	Me(ctx context.Context, id string) (entity.User, error)
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
@@ -77,6 +78,17 @@ func (uc *userConnection) UpdateUser(ctx context.Context, updateDTO dto.UpdateUs
 
 	if tx := uc.connection.Model(&user).Updates(map[string]interface{}{"name": updateDTO.Name, "notelp": updateDTO.Notelp}).Error; tx != nil {
 		return entity.User{}, tx
+	}
+
+	return user, nil
+}
+
+func (uc *userConnection) Me(ctx context.Context, id string) (entity.User, error){
+	var user entity.User
+
+	getUser := uc.connection.Where("u_id = ?", id).Take(&user)
+	if getUser.Error != nil {
+		return entity.User{}, errors.New("invalid user id")
 	}
 
 	return user, nil

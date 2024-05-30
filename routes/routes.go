@@ -18,6 +18,7 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 
 	userPrivate := router.Group("/user").Use(middleware.Authenticate())
 	{
+		userPrivate.GET("/me", userController.Me)
 		userPrivate.GET("", userController.GetAllUser)
 		userPrivate.DELETE("/:id", userController.DeleteUser)
 		userPrivate.PUT("/update", userController.UpdateUser)
