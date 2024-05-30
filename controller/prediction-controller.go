@@ -90,7 +90,7 @@ func (pc *predictionController) GetPredictionByUserID(ctx *gin.Context) {
 }
 
 func (pc *predictionController) GetPredictionByPredictionID(ctx *gin.Context) {
-	prediciton, err := pc.predictionService.GetPredictionByPredictionID(ctx, ctx.Param("P_Id"))
+	prediciton, err := pc.predictionService.GetPredictionByPredictionID(ctx, ctx.Param("p_id"))
 	if err != nil {
 		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)
