@@ -58,7 +58,7 @@ func (pc *predictionController) AddPrediction(ctx *gin.Context) {
 
 	res, err := pc.predictionService.CreatePrediction(ctx, predictionDTO, UserID)
 	if err != nil {
-		res := utils.BuildErrorResponse("Failed to predict", http.StatusBadRequest)
+		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
