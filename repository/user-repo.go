@@ -86,7 +86,7 @@ func (uc *userConnection) UpdateUser(ctx context.Context, updateDTO dto.UpdateUs
 func (uc *userConnection) Me(ctx context.Context, id string) (entity.User, error){
 	var user entity.User
 
-	getUser := uc.connection.Where("u_id = ?", id).Take(&user)
+	getUser := uc.connection.Where("u_id = ?", id).Preload("Prediction").Take(&user)
 	if getUser.Error != nil {
 		return entity.User{}, errors.New("invalid user id")
 	}
