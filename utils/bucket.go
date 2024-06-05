@@ -16,7 +16,7 @@ import (
 
 func UploadToBucket(file *multipart.FileHeader) (string, error) {
 	ctx := context.Background()
-	serviceAccountKeyFile := "./bangkit-cloud-computing-2af7d72444a8.json"
+	serviceAccountKeyFile := "../bangkit-cloud-computing-2af7d72444a8.json"
 	client, err := storage.NewClient(ctx, option.WithCredentialsFile(serviceAccountKeyFile))
 	if err != nil {
 		return "", fmt.Errorf("storage.NewClient: %v", err)
