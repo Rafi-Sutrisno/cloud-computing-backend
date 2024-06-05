@@ -11,15 +11,17 @@ import urllib.request as urllib
 import base64
 from flask import Flask, request, jsonify
 
-model = keras.models.load_model("nn.h5")
+model = keras.models.load_model("model.h5")
 
 app = Flask(__name__)
 
 def transform_image(pillow_image):
+    # Convert grayscale to RGB
+    pillow_image = pillow_image.convert('RGB')
     data = np.asarray(pillow_image)
     data = data / 255.0
-    data = data[np.newaxis, ..., np.newaxis]
-    data = tf.image.resize(data, [28, 28])
+    data = data[np.newaxis, ...]
+    data = tf.image.resize(data, [224, 224])
     return data
 
 def predict(x):

@@ -24,6 +24,7 @@ type UserController interface {
 	// regist login
 	AddUser(ctx *gin.Context)
 	GetAllUser(ctx *gin.Context)
+	GetAllDoctor(ctx *gin.Context)
 	DeleteUser(ctx *gin.Context)
 	UserLoginToken(ctx *gin.Context)
 	UpdateUser(ctx *gin.Context)
@@ -99,6 +100,19 @@ func (uc *userController) GetAllUser(ctx *gin.Context) {
 	}
 
 	res := utils.BuildResponse("success ini user mu", http.StatusOK, userList)
+	_ = res
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (uc *userController) GetAllDoctor(ctx *gin.Context) {
+	userList, err := uc.userService.GetAllDoctor(ctx)
+	if err != nil {
+		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponse("success ini doctor mu", http.StatusOK, userList)
 	_ = res
 	ctx.JSON(http.StatusOK, res)
 }

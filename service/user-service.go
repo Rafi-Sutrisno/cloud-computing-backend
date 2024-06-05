@@ -18,6 +18,7 @@ type UserService interface {
 	// functional
 	CreateUser(ctx context.Context, userDTO dto.CreateUserDTO) (entity.User, error)
 	GetAllUser(ctx context.Context) ([]entity.User, error)
+	GetAllDoctor(ctx context.Context) ([]entity.User, error)
 	DeleteUser(ctx context.Context, id string) error
 	IsDuplicateEmail(ctx context.Context, email string) (bool, error)
 	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
@@ -67,6 +68,10 @@ func (us *userService) GetUserByEmail(ctx context.Context, email string) (entity
 
 func (us *userService) GetAllUser(ctx context.Context) ([]entity.User, error) {
 	return us.userRepository.GetAllUser(ctx)
+}
+
+func (us *userService) GetAllDoctor(ctx context.Context) ([]entity.User, error) {
+	return us.userRepository.GetAllDoctor(ctx)
 }
 
 func (us *userService) DeleteUser(ctx context.Context, id string) error {

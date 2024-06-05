@@ -17,6 +17,7 @@ type UserRepository interface {
 	// functional
 	AddUser(ctx context.Context, user entity.User) (entity.User, error)
 	GetAllUser(ctx context.Context) ([]entity.User, error)
+	GetAllDoctor(ctx context.Context) ([]entity.User, error)
 	DeleteUser(ctx context.Context, id string) error
 	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
 	UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error)
@@ -55,6 +56,19 @@ func (db *userConnection) GetAllUser(ctx context.Context) ([]entity.User, error)
 	}
 
 	return listUser, nil
+}
+
+func (db *userConnection) GetAllDoctor(ctx context.Context) ([]entity.User, error) {
+	var listDoctor []entity.User
+	var doctor = "doctor"
+
+	tx := db.connection.Where("role = ?", doctor).Find(&listDoctor)
+
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	return listDoctor, nil
 }
 
 func (db *userConnection) DeleteUser(ctx context.Context, id string) error {

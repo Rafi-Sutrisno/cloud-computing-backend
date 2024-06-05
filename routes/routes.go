@@ -20,6 +20,7 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 	{
 		userPrivate.GET("/me", userController.Me)
 		userPrivate.GET("", userController.GetAllUser)
+		userPrivate.GET("/doctor", userController.GetAllDoctor)
 		userPrivate.DELETE("/:id", userController.DeleteUser)
 		userPrivate.PUT("/update", userController.UpdateUser)
 	}
