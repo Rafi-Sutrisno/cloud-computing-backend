@@ -25,6 +25,7 @@ type UserService interface {
 	VerifyCredential(ctx context.Context, email string, pass string) (bool, error)
 	UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error)
 	GetMe(ctx context.Context, id string) (entity.User, error)
+	AddDoctor(ctx context.Context, userDTO dto.CreateUserDTO) (entity.User, error)
 }
 
 func NewUserService(ur repository.UserRepository) UserService {
@@ -101,4 +102,19 @@ func (us *userService) VerifyCredential(ctx context.Context, email string, pass 
 
 func (us *userService) GetMe(ctx context.Context, id string) (entity.User, error) {
 	return us.userRepository.Me(ctx, id)
+}
+
+func (us *userService) AddDoctor(ctx context.Context, userDTO dto.CreateUserDTO) (entity.User, error){
+	id := uuid.NewString()
+
+	newUser := entity.User{
+		U_Id:   id,
+		Name:   userDTO.Name,
+		Email:  userDTO.Email,
+		Notelp: userDTO.Notelp,
+		Pass:   userDTO.Pass,
+		Role:   "Doctor",
+	}
+
+	return us.userRepository.AddUser(ctx, newUser)
 }

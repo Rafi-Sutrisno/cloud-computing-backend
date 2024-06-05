@@ -29,6 +29,7 @@ type UserController interface {
 	UserLoginToken(ctx *gin.Context)
 	UpdateUser(ctx *gin.Context)
 	Me(ctx *gin.Context)
+	AddDoctor(ctx *gin.Context)
 }
 
 func NewUserController(us service.UserService, jwt service.JWTService) UserController {
@@ -81,6 +82,32 @@ func (uc *userController) AddUser(ctx *gin.Context) {
 	}
 
 	result, err := uc.userService.CreateUser(ctx.Request.Context(), user)
+	if err != nil {
+		res := utils.BuildErrorResponse("Failed to register user", http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponse("Success to register user", http.StatusOK, result)
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (uc *userController) AddDoctor(ctx *gin.Context){
+	var user dto.CreateUserDTO
+	if tx := ctx.ShouldBind(&user); tx != nil {
+		res := utils.BuildErrorResponse("failed to process, data incomplete", http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	isEmailRegistered, _ := uc.userService.IsDuplicateEmail(ctx.Request.Context(), user.Email)
+	if isEmailRegistered {
+		res := utils.BuildErrorResponse("Email already registered", http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	result, err := uc.userService.AddDoctor(ctx.Request.Context(), user)
 	if err != nil {
 		res := utils.BuildErrorResponse("Failed to register user", http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)

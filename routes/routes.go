@@ -14,6 +14,7 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 		// public can access
 		inscurePublic.POST("/add", userController.AddUser)
 		inscurePublic.POST("/login", userController.UserLoginToken)
+		inscurePublic.POST("/adddoctor", userController.AddDoctor)
 	}
 
 	userPrivate := router.Group("/user").Use(middleware.Authenticate())

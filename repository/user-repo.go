@@ -60,7 +60,7 @@ func (db *userConnection) GetAllUser(ctx context.Context) ([]entity.User, error)
 
 func (db *userConnection) GetAllDoctor(ctx context.Context) ([]entity.User, error) {
 	var listDoctor []entity.User
-	var doctor = "doctor"
+	var doctor = "Doctor"
 
 	tx := db.connection.Where("role = ?", doctor).Find(&listDoctor)
 
