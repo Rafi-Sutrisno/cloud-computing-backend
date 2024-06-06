@@ -44,7 +44,7 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 	chatroomPublic := router.Group("/chatroom").Use(middleware.Authenticate())
 	{
 		chatroomPublic.POST("/add", chatroomController.AddChatroom)
-		chatroomPublic.DELETE("/del", chatroomController.RemoveChatroom)
+		chatroomPublic.DELETE("/del/:id", chatroomController.RemoveChatroom)
 		chatroomPublic.GET("/get", chatroomController.GetChatroom)
 	}
 

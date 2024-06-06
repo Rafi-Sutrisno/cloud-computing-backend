@@ -15,7 +15,7 @@ type ChatRoomService interface {
 	// functional
 	CreateChatroom(ctx context.Context, chatroomDTO dto.CreateChatRoomDTO) (entity.ChatRoom, error)
 	RemoveChatroom(ctx context.Context, id uint64) error
-	GetChatroom(ctx context.Context, getchatroomDTO dto.GetChatRoomDTO) ([]entity.ChatRoom, error)
+	GetChatroom(ctx context.Context, id string, role string) ([]entity.ChatRoom, error)
 }
 
 func NewChatRoomService(cr repository.ChatroomRepository) ChatRoomService {
@@ -28,7 +28,9 @@ func (cs *chatroomService) CreateChatroom(ctx context.Context, chatroomDTO dto.C
 
 	newChatroom := entity.ChatRoom{
 		Uid: chatroomDTO.Uid,
+		U_Name: chatroomDTO.U_Name,
 		Uid_Doctor: chatroomDTO.Uid_Doctor,
+		U_Doctor: chatroomDTO.U_Doctor,
 	}
 
 	return cs.chatroomRepository.AddChatroom(ctx, newChatroom)
@@ -38,12 +40,12 @@ func (cs *chatroomService) RemoveChatroom(ctx context.Context, id uint64) error 
 	return cs.chatroomRepository.RemoveChatroom(ctx, id)
 }
 
-func (cs *chatroomService) GetChatroom(ctx context.Context, getchatroomDTO dto.GetChatRoomDTO) ([]entity.ChatRoom, error) {
+func (cs *chatroomService) GetChatroom(ctx context.Context, id string, role string) ([]entity.ChatRoom, error) {
 
-	if(getchatroomDTO.Role == "User"){
-		return cs.chatroomRepository.GetChatroomUser(ctx, getchatroomDTO.Test)
+	if(role == "User"){
+		return cs.chatroomRepository.GetChatroomUser(ctx, id)
 	}else {
-		return cs.chatroomRepository.GetChatroomDoctor(ctx, getchatroomDTO.Test)
+		return cs.chatroomRepository.GetChatroomDoctor(ctx, id)
 	}
 	
 }
