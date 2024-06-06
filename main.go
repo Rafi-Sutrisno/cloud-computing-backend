@@ -36,12 +36,16 @@ func main() {
 	predictionService := service.NewPredictionService(predictionRepository)
 	predictionController := controller.NewPredictionController(predictionService, jwtService)
 
+	chatroomRepository := repository.NewChatroomRepository(db)
+	chatroomService := service.NewChatRoomService(chatroomRepository)
+	chatroomController := controller.NewChatroomController(chatroomService, jwtService)
+
 	defer config.CloseDatabaseConnection(db)
 
 	server := gin.Default()
 	server.Use(middleware.CORSMiddleware())
 
-	routes.Routes(server, userController, diseaseController, predictionController, jwtService)
+	routes.Routes(server, userController, diseaseController, predictionController, chatroomController, jwtService)
 
 	port := os.Getenv("PORT")
 	if port == "" {

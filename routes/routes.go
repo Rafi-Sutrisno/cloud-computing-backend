@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(router *gin.Engine, userController controller.UserController, diseaseController controller.DiseaseController, predictionController controller.PredictionController, jwtService service.JWTService) {
+func Routes(router *gin.Engine, userController controller.UserController, diseaseController controller.DiseaseController, predictionController controller.PredictionController, chatroomController  controller.ChatroomController,jwtService service.JWTService) {
 	inscurePublic := router.Group("/inscure")
 	{
 		// public can access
@@ -39,6 +39,13 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 		predictionPublic.POST("", predictionController.AddPrediction)
 		predictionPublic.GET("/list", predictionController.GetPredictionByUserID)
 		predictionPublic.GET("/:p_id", predictionController.GetPredictionByPredictionID)
+	}
+
+	chatroomPublic := router.Group("/chatroom").Use(middleware.Authenticate())
+	{
+		chatroomPublic.POST("/add", chatroomController.AddChatroom)
+		chatroomPublic.DELETE("/del", chatroomController.RemoveChatroom)
+		chatroomPublic.GET("/get", chatroomController.GetChatroom)
 	}
 
 }

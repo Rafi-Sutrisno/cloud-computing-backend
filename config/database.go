@@ -36,6 +36,7 @@ func SetupDatabaseConnection() *gorm.DB {
 		entity.User{},
 		entity.Disease{},
 		entity.Prediction{},
+		entity.ChatRoom{},
 	); err != nil {
 		fmt.Println(err)
 		panic(err)
