@@ -44,6 +44,7 @@ func (dc *diseaseController) AddDisease(ctx *gin.Context) {
 		fmt.Println(res2)
 
 		ctx.String(http.StatusBadRequest, "get form error %s", tx.Error())
+		return
 	}
 
 	result, err := dc.diseaseService.CreateDisease(ctx.Request.Context(), disease)

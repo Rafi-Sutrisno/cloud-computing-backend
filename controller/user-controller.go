@@ -180,7 +180,7 @@ func (uc *userController) UserLoginToken(ctx *gin.Context) {
 		return
 	}
 
-	token := uc.jwtService.GenerateToken(user.U_Id, user.Name)
+	token := uc.jwtService.GenerateToken(user.U_Id, user.Role)
 	fmt.Print(token)
 	res := utils.BuildResponse("Successful login", http.StatusOK, token)
 	ctx.JSON(http.StatusOK, res)

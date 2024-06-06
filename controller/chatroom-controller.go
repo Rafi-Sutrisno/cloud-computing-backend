@@ -8,6 +8,7 @@ import (
 	"mods/utils"
 	"net/http"
 	"strconv"
+	"strings"
 
 	// "os/exec"
 	// "strconv"
@@ -34,6 +35,18 @@ func NewChatroomController(cs service.ChatRoomService, jwt service.JWTService) C
 	}
 }
 
+
+func (cc *chatroomController) RetriveIDandRole(ctx *gin.Context)(string, string) {
+	token := ctx.GetHeader("Authorization")
+	token = strings.Replace(token, "Bearer ", "", -1)
+
+	id, _ := cc.jwtService.GetUserIDByToken(token)
+	role, _ := cc.jwtService.GetRoleByToken(token)
+	return id, role
+}
+
+
+
 func (cc *chatroomController) AddChatroom(ctx *gin.Context) {
 
 	var chatroom dto.CreateChatRoomDTO
@@ -43,6 +56,7 @@ func (cc *chatroomController) AddChatroom(ctx *gin.Context) {
 		fmt.Println(res2)
 
 		ctx.String(http.StatusBadRequest, "get form error %s", tx.Error())
+		return
 	}
 
 	result, err := cc.chatroomService.CreateChatroom(ctx.Request.Context(), chatroom)
@@ -76,18 +90,11 @@ func (cc *chatroomController) RemoveChatroom(ctx *gin.Context) {
 }
 
 func (cc *chatroomController) GetChatroom(ctx *gin.Context) {
-	var getchatroom dto.GetChatRoomDTO
+	
+	id, role := cc.RetriveIDandRole(ctx)
+	fmt.Println(id, role)
 
-	if tx := ctx.ShouldBind(&getchatroom); tx != nil {
-
-		res2 := ctx.Request
-		fmt.Println(res2)
-
-		ctx.String(http.StatusBadRequest, "testing 1 get form error %s", tx.Error())
-		return
-	}
-
-	result, err := cc.chatroomService.GetChatroom(ctx.Request.Context(), getchatroom)
+	result, err := cc.chatroomService.GetChatroom(ctx.Request.Context(), id, role)
 	if err != nil {
 		res := utils.BuildErrorResponse("testing 2 Failed to get chatroom", http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)
