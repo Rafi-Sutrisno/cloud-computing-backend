@@ -36,7 +36,7 @@ func (db *diseaseConnection) AddDisease(ctx context.Context, disease entity.Dise
 func (db *diseaseConnection) GetAllDisease(ctx context.Context) ([]entity.Disease, error) {
 	var listDisease []entity.Disease
 
-	tx := db.connection.Find(&listDisease)
+	tx := db.connection.Order("id ASC").Find(&listDisease)
 
 	if tx.Error != nil {
 		return nil, tx.Error
