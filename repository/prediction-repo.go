@@ -15,6 +15,7 @@ type PredictionRepository interface {
 	AddPrediction(ctx context.Context, prediction entity.Prediction) (entity.Prediction, error)
 	GetPredictionByUserID(ctx context.Context, UserID string) ([]entity.Prediction, error)
 	GetPredictionByPredictionID(ctx context.Context, PredicitonID string) (entity.Prediction, error)
+	DeletePredictionbyId(ctx context.Context, PredicitonID string) (error)
 }
 
 func NewPredictionRepository(db *gorm.DB) PredictionRepository {
@@ -48,4 +49,14 @@ func (pc *predictionConnection) GetPredictionByPredictionID(ctx context.Context,
 	}
 
 	return prediciton, nil
+}
+
+func (pc *predictionConnection) DeletePredictionbyId(ctx context.Context, PredicitonID string) ( error) {
+	var prediction entity.Prediction
+
+	if err := pc.connection.Where("pr_id = ?", PredicitonID).Delete(&prediction).Error; err != nil {
+		return err
+	}
+
+	return nil
 }

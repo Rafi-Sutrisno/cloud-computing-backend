@@ -25,6 +25,7 @@ type PredictionController interface {
 	AddPrediction(ctx *gin.Context)
 	GetPredictionByUserID(ctx *gin.Context)
 	GetPredictionByPredictionID(ctx *gin.Context)
+	DeletePredictionbyId(ctx *gin.Context)
 }
 
 func NewPredictionController(ps service.PredictionService, jwt service.JWTService) PredictionController {
@@ -98,6 +99,20 @@ func (pc *predictionController) GetPredictionByPredictionID(ctx *gin.Context) {
 	}
 
 	res := utils.BuildResponse("success ini prediction mu", http.StatusOK, prediciton)
+	_ = res
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (pc *predictionController) DeletePredictionbyId(ctx *gin.Context) {
+	predictId := ctx.Param("p_id")
+	err := pc.predictionService.DeletePredictionbyId(ctx, predictId)
+	if err != nil {
+		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponse("success menghapus prediction mu", http.StatusOK, predictId)
 	_ = res
 	ctx.JSON(http.StatusOK, res)
 }

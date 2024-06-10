@@ -47,7 +47,7 @@ func (db *diseaseConnection) GetAllDisease(ctx context.Context) ([]entity.Diseas
 
 func (db *diseaseConnection) DeleteDisease(ctx context.Context, id uint64) error {
 	var disease entity.Disease
-	tx := db.connection.Where("U_Id = ?", id).Delete(&disease)
+	tx := db.connection.Where("id = ?", id).Delete(&disease)
 
 	if tx.Error != nil {
 		return tx.Error

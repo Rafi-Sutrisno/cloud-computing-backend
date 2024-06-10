@@ -39,6 +39,7 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 		predictionPublic.POST("", predictionController.AddPrediction)
 		predictionPublic.GET("/list", predictionController.GetPredictionByUserID)
 		predictionPublic.GET("/:p_id", predictionController.GetPredictionByPredictionID)
+		predictionPublic.DELETE("del/:p_id", predictionController.DeletePredictionbyId)
 	}
 
 	chatroomPublic := router.Group("/chatroom").Use(middleware.Authenticate())
