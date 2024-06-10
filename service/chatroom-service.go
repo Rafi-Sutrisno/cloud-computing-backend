@@ -16,6 +16,7 @@ type ChatRoomService interface {
 	CreateChatroom(ctx context.Context, chatroomDTO dto.CreateChatRoomDTO) (entity.ChatRoom, error)
 	RemoveChatroom(ctx context.Context, id uint64) error
 	GetChatroom(ctx context.Context, id string, role string) ([]entity.ChatRoom, error)
+	IsDuplicateChatRoom(ctx context.Context, U_id string , D_id string) (bool, error)
 }
 
 func NewChatRoomService(cr repository.ChatroomRepository) ChatRoomService {
@@ -38,6 +39,10 @@ func (cs *chatroomService) CreateChatroom(ctx context.Context, chatroomDTO dto.C
 
 func (cs *chatroomService) RemoveChatroom(ctx context.Context, id uint64) error {
 	return cs.chatroomRepository.RemoveChatroom(ctx, id)
+}
+
+func (cs *chatroomService) IsDuplicateChatRoom(ctx context.Context, U_id string , D_id string) (bool, error) {
+	return cs.chatroomRepository.IsDuplicateChatRoom(ctx, U_id, D_id)
 }
 
 func (cs *chatroomService) GetChatroom(ctx context.Context, id string, role string) ([]entity.ChatRoom, error) {

@@ -17,6 +17,7 @@ type ChatroomRepository interface {
 	RemoveChatroom(ctx context.Context, id uint64) error
 	GetChatroomUser(ctx context.Context, id string) ([]entity.ChatRoom, error)
 	GetChatroomDoctor(ctx context.Context, id string) ([]entity.ChatRoom, error)
+	IsDuplicateChatRoom(ctx context.Context, U_id string , D_id string) (bool, error)
 }
 
 func NewChatroomRepository(db *gorm.DB) ChatroomRepository {
@@ -42,6 +43,17 @@ func (db *chatroomConnection) RemoveChatroom(ctx context.Context, id uint64) err
 	}
 
 	return nil
+}
+
+func (db *chatroomConnection) IsDuplicateChatRoom(ctx context.Context, U_id string , D_id string) (bool, error) {
+	var chatroom entity.ChatRoom
+	tx := db.connection.Where("uid = ?", U_id).Where("uid_doctor = ?", D_id).First(&chatroom)
+
+	if tx.Error != nil {
+		return false, nil
+	}
+
+	return true, nil
 }
 
 func (db *chatroomConnection) GetChatroomUser(ctx context.Context, id string) ([]entity.ChatRoom, error) {

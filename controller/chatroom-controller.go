@@ -58,15 +58,22 @@ func (cc *chatroomController) AddChatroom(ctx *gin.Context) {
 		ctx.String(http.StatusBadRequest, "get form error %s", tx.Error())
 		return
 	}
+	
+	result, _ := cc.chatroomService.IsDuplicateChatRoom(ctx.Request.Context(), chatroom.Uid, chatroom.Uid_Doctor)
+	if result {
+		res := utils.BuildErrorResponse("Duplicate Chatroom", http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
 
-	result, err := cc.chatroomService.CreateChatroom(ctx.Request.Context(), chatroom)
+	result2, err := cc.chatroomService.CreateChatroom(ctx.Request.Context(), chatroom)
 	if err != nil {
 		res := utils.BuildErrorResponse("Failed to add chatroom", http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
-	res := utils.BuildResponse("Success to register chatroom", http.StatusOK, result)
+	res := utils.BuildResponse("Success to register chatroom", http.StatusOK, result2)
 	ctx.JSON(http.StatusOK, res)
 }
 
