@@ -26,6 +26,7 @@ type UserService interface {
 	UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error)
 	GetMe(ctx context.Context, id string) (entity.User, error)
 	AddDoctor(ctx context.Context, userDTO dto.CreateUserDTO) (entity.User, error)
+	ProfilePicture(ctx context.Context, imageDTO dto.PredictImageDTO, uid string) (string, error)
 }
 
 func NewUserService(ur repository.UserRepository) UserService {
@@ -117,4 +118,18 @@ func (us *userService) AddDoctor(ctx context.Context, userDTO dto.CreateUserDTO)
 	}
 
 	return us.userRepository.AddUser(ctx, newUser)
+}
+
+func (us *userService) ProfilePicture(ctx context.Context, imageDTO dto.PredictImageDTO, uid string) (string, error) {
+	imageFile := imageDTO.File
+
+	img_uuid, err := utils.UploadToBucket(imageFile, "profile_picture")
+	if err != nil {
+		return "failed to upload to bucket", err
+	}
+
+	link := "https://storage.googleapis.com/example-bucket-test-cc-trw/" + img_uuid
+
+	return us.userRepository.ProfilePicture(ctx, link, uid)
+
 }

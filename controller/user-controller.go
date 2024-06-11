@@ -30,6 +30,7 @@ type UserController interface {
 	UpdateUser(ctx *gin.Context)
 	Me(ctx *gin.Context)
 	AddDoctor(ctx *gin.Context)
+	ProfilePicture(ctx *gin.Context)
 }
 
 func NewUserController(us service.UserService, jwt service.JWTService) UserController {
@@ -207,7 +208,33 @@ func (uc *userController) UpdateUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
-
+			
 	response := utils.BuildResponse("berhasil update user", http.StatusOK, res)
+	ctx.JSON(http.StatusCreated, response)
+}
+
+func (uc *userController) ProfilePicture(ctx *gin.Context) {
+	var imageDTO dto.PredictImageDTO
+	if err := ctx.ShouldBind(&imageDTO); err != nil {
+		res := utils.BuildErrorResponse("Failed to process request", http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	uid, err := uc.RetrieveID(ctx)
+	if err != nil {
+		response := utils.BuildErrorResponse("failed to process request", http.StatusBadRequest)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
+	}
+
+	res, err := uc.userService.ProfilePicture(ctx, imageDTO, uid)
+	if err != nil {
+		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	response := utils.BuildResponse("success to update picture", http.StatusOK, res)
 	ctx.JSON(http.StatusCreated, response)
 }

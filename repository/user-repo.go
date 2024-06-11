@@ -22,6 +22,7 @@ type UserRepository interface {
 	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
 	UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error)
 	Me(ctx context.Context, id string) (entity.User, error)
+	ProfilePicture(ctx context.Context, link string, uid string) (string, error)
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
@@ -106,4 +107,19 @@ func (uc *userConnection) Me(ctx context.Context, id string) (entity.User, error
 	}
 
 	return user, nil
+}
+
+func(uc *userConnection) ProfilePicture(ctx context.Context, link string, uid string) (string, error) {
+	var user entity.User
+
+	getUser := uc.connection.Where("u_id = ?", uid).Take(&user)
+	if getUser.Error != nil {
+		return "failed to get user with the id", errors.New("invalid user id")
+	}
+
+	if tx := uc.connection.Model(&user).Updates(map[string]interface{}{"picture": link}).Error; tx != nil {
+		return "failed to update user", tx
+	}
+
+	return "success to update profile picture.", nil
 }
