@@ -40,13 +40,13 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 		predictionPublic.POST("", predictionController.AddPrediction)
 		predictionPublic.GET("/list", predictionController.GetPredictionByUserID)
 		predictionPublic.GET("/:p_id", predictionController.GetPredictionByPredictionID)
-		predictionPublic.DELETE("del/:p_id", predictionController.DeletePredictionbyId)
+		predictionPublic.DELETE("/del/:p_id/:p_link", predictionController.DeletePredictionbyId)
 	}
 
 	chatroomPublic := router.Group("/chatroom").Use(middleware.Authenticate())
 	{
 		chatroomPublic.POST("/add", chatroomController.AddChatroom)
-		chatroomPublic.DELETE("/del/:id/:p_link", chatroomController.RemoveChatroom)
+		chatroomPublic.DELETE("/del/:id", chatroomController.RemoveChatroom)
 		chatroomPublic.GET("/get", chatroomController.GetChatroom)
 	}
 
