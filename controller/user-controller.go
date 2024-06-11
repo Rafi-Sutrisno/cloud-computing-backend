@@ -230,8 +230,11 @@ func (uc *userController) ProfilePicture(ctx *gin.Context) {
 
 	defaultCheck := uc.userService.DefaultCheck(ctx, uid)
 	if defaultCheck != nil {
-
+		response := utils.BuildErrorResponse("failed to delete pict from bucket", http.StatusBadRequest)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
 	}
+	
 	res, err := uc.userService.ProfilePicture(ctx, imageDTO, uid)
 	if err != nil {
 		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)

@@ -7,6 +7,7 @@ import (
 	"mods/entity"
 	"mods/repository"
 	"mods/utils"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -47,6 +48,7 @@ func (us *userService) CreateUser(ctx context.Context, userDTO dto.CreateUserDTO
 		Email:  userDTO.Email,
 		Notelp: userDTO.Notelp,
 		Pass:   userDTO.Pass,
+		Picture: "https://storage.googleapis.com/example-bucket-test-cc-trw/default.png",
 		Role:   "User",
 	}
 
@@ -147,6 +149,14 @@ func (us *userService) DefaultCheck(ctx context.Context, uid string) (error) {
 
 	if (currPicture == "https://storage.googleapis.com/example-bucket-test-cc-trw/default.png"){
 		return nil
+	}
+
+	parts := strings.Split(currPicture, "/")
+	fileName := parts[len(parts)-1]
+
+	delete := utils.DeleteFromBucket("profile_picture", fileName)
+	if delete != nil {
+		return delete
 	}
 
 	return nil
