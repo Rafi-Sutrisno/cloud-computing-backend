@@ -3,6 +3,7 @@ package controller
 import (
 	// "encoding/json"
 
+	"fmt"
 	"mods/dto"
 	"mods/service"
 	"mods/utils"
@@ -105,7 +106,9 @@ func (pc *predictionController) GetPredictionByPredictionID(ctx *gin.Context) {
 
 func (pc *predictionController) DeletePredictionbyId(ctx *gin.Context) {
 	predictId := ctx.Param("p_id")
-	err := pc.predictionService.DeletePredictionbyId(ctx, predictId)
+	predictLink := ctx.Param("p_link")
+	fmt.Print("get param")
+	err := pc.predictionService.DeletePredictionbyId(ctx, predictId, predictLink)
 	if err != nil {
 		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)

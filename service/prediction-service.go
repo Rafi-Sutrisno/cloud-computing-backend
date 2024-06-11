@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"mods/dto"
 	"mods/entity"
 	"mods/repository"
@@ -19,7 +20,7 @@ type PredictionService interface {
 	CreatePrediction(ctx context.Context, predictionDTO dto.PredictImageDTO, userID string) (entity.Prediction, error)
 	GetPredictionByUserID(ctx context.Context, UserID string) ([]entity.Prediction, error)
 	GetPredictionByPredictionID(ctx context.Context, PredictionID string) (entity.Prediction, error)
-	DeletePredictionbyId(ctx context.Context, PredictionID string) ( error)
+	DeletePredictionbyId(ctx context.Context, PredictionID string, PredictLink string) ( error)
 }
 
 func NewPredictionService(pr repository.PredictionRepository) PredictionService {
@@ -63,6 +64,12 @@ func (ps *predictionService) GetPredictionByPredictionID(ctx context.Context, Pr
 	return ps.predictionRepository.GetPredictionByPredictionID(ctx, PredictionID)
 }
 
-func (ps *predictionService) DeletePredictionbyId(ctx context.Context, PredictionID string) ( error) {
+func (ps *predictionService) DeletePredictionbyId(ctx context.Context, PredictionID string, PredictLink string) ( error) {
+	fmt.Print("in service")
+	err := utils.DeleteFromBucket("prediction", PredictLink)
+	if err != nil {
+		return err
+	}
+
 	return ps.predictionRepository.DeletePredictionbyId(ctx, PredictionID)
 }

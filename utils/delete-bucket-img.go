@@ -22,6 +22,7 @@ func DeleteFromBucket(folderPath string, fileName string) error {
 
 	// Create the full path to the object
 	objectPath := folderPath + "/" + fileName
+	fmt.Print("\n" + objectPath + "\n")
 
 	// Create a handle to the object in the bucket
 	objectHandle := client.Bucket(bucketName).Object(objectPath)
