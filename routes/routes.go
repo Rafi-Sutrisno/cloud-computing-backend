@@ -24,6 +24,7 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 		userPrivate.GET("/doctor", userController.GetAllDoctor)
 		userPrivate.DELETE("/:id", userController.DeleteUser)
 		userPrivate.PUT("/update", userController.UpdateUser)
+		userPrivate.PUT("/profilepic", userController.ProfilePicture)
 	}
 
 	diseasePublic := router.Group("/disease")
