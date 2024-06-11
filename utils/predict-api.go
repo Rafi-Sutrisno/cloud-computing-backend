@@ -19,8 +19,8 @@ func PredictionAPI(fileName string) (string, error) {
 	}
 
 	// Define the URL of your Cloud Run service
-	url := "http://127.0.0.1:8000/predict"
-	// url := "https://inscure-api-pc7eaxaqma-et.a.run.app/predict"
+	// url := "http://127.0.0.1:8000/predict"
+	url := "https://py-load-h5-model-pc7eaxaqma-et.a.run.app/predict"
 
 	// Make a POST request to the Cloud Run service
 	response, err := http.Post(url, "application/json", bytes.NewBuffer(requestBody))

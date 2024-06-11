@@ -32,7 +32,7 @@ func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO
 	id := uuid.NewString()
 	imageFile := predictionDTO.File
 
-	img_uuid, err := utils.UploadToBucket(imageFile)
+	img_uuid, err := utils.UploadToBucket(imageFile, "prediction")
 	if err != nil {
 		return entity.Prediction{}, err
 	}
@@ -42,9 +42,11 @@ func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO
 		return entity.Prediction{}, err
 	}
 
+	link := "https://storage.googleapis.com/example-bucket-test-cc-trw/" + img_uuid
+
 	newPrediction := entity.Prediction{
 		Pr_ID:          id,
-		Gambar:         img_uuid,
+		Gambar:         link,
 		Hasil_Prediksi: result,
 		Tgl:            time.Now(),
 		UserID:         userID,

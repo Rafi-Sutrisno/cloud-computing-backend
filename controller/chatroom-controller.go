@@ -108,8 +108,6 @@ func (cc *chatroomController) GetChatroom(ctx *gin.Context) {
 		return
 	}
 
-
-
 	res := utils.BuildResponse2("testing 3 Success to get chatroom", http.StatusOK, result, role)
 	ctx.JSON(http.StatusOK, res)
 }

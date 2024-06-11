@@ -37,7 +37,7 @@ def predict_image():
     if not imageName:
         return jsonify({"error": "No imageName provided"}), 400
     
-    urlBucket = "https://storage.googleapis.com/example-bucket-test-cc-trw/"
+    urlBucket = "https://storage.googleapis.com/example-bucket-test-cc-trw/prediction/" 
     filepath = urlBucket + imageName
 
     try:

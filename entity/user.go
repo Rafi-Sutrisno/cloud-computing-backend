@@ -13,6 +13,7 @@ type User struct {
 	Notelp string `json:"notelp" binding:"required"`
 	Pass   string `json:"pass" binding:"required"`
 	Role   string `json:"role" binding:"required"`
+	Picture string `json:"picture"`
 
 	Prediction []Prediction `json:"Prediciton,omitempty"`
 }
