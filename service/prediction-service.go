@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"mods/dto"
 	"mods/entity"
 	"mods/repository"
@@ -64,6 +65,7 @@ func (ps *predictionService) GetPredictionByPredictionID(ctx context.Context, Pr
 }
 
 func (ps *predictionService) DeletePredictionbyId(ctx context.Context, PredictionID string, PredictLink string) ( error) {
+	fmt.Print("in service")
 	err := utils.DeleteFromBucket("prediction", PredictLink)
 	if err != nil {
 		return err
