@@ -14,7 +14,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-func UploadToBucket(file *multipart.FileHeader) (string, error) {
+func UploadToBucket(file *multipart.FileHeader, folder string) (string, error) {
 	ctx := context.Background()
 	serviceAccountKeyFile := "../bangkit-cloud-computing-2af7d72444a8.json"
 	client, err := storage.NewClient(ctx, option.WithCredentialsFile(serviceAccountKeyFile))
@@ -23,8 +23,8 @@ func UploadToBucket(file *multipart.FileHeader) (string, error) {
 	}
 	defer client.Close()
 
-	bucketName := "example-bucket-test-cc-trw"
-	destinationName := uuid.NewString()
+	bucketName := "example-bucket-test-cc-trw" 
+	destinationName := folder + "/" + uuid.NewString()
 	imageName := filepath.Base(file.Filename)
 
 	fileopen, err := file.Open()
