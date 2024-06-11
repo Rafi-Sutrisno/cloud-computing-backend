@@ -228,6 +228,10 @@ func (uc *userController) ProfilePicture(ctx *gin.Context) {
 		return
 	}
 
+	defaultCheck := uc.userService.DefaultCheck(ctx, uid)
+	if defaultCheck != nil {
+
+	}
 	res, err := uc.userService.ProfilePicture(ctx, imageDTO, uid)
 	if err != nil {
 		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)

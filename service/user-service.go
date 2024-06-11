@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"mods/dto"
 	"mods/entity"
 	"mods/repository"
@@ -27,6 +28,7 @@ type UserService interface {
 	GetMe(ctx context.Context, id string) (entity.User, error)
 	AddDoctor(ctx context.Context, userDTO dto.CreateUserDTO) (entity.User, error)
 	ProfilePicture(ctx context.Context, imageDTO dto.PredictImageDTO, uid string) (string, error)
+	DefaultCheck(ctx context.Context, uid string) (error)
 }
 
 func NewUserService(ur repository.UserRepository) UserService {
@@ -114,6 +116,7 @@ func (us *userService) AddDoctor(ctx context.Context, userDTO dto.CreateUserDTO)
 		Email:  userDTO.Email,
 		Notelp: userDTO.Notelp,
 		Pass:   userDTO.Pass,
+		Picture: "https://storage.googleapis.com/example-bucket-test-cc-trw/default.png",
 		Role:   "Doctor",
 	}
 
@@ -122,7 +125,7 @@ func (us *userService) AddDoctor(ctx context.Context, userDTO dto.CreateUserDTO)
 
 func (us *userService) ProfilePicture(ctx context.Context, imageDTO dto.PredictImageDTO, uid string) (string, error) {
 	imageFile := imageDTO.File
-
+	
 	img_uuid, err := utils.UploadToBucket(imageFile, "profile_picture")
 	if err != nil {
 		return "failed to upload to bucket", err
@@ -132,4 +135,19 @@ func (us *userService) ProfilePicture(ctx context.Context, imageDTO dto.PredictI
 
 	return us.userRepository.ProfilePicture(ctx, link, uid)
 
+}
+
+func (us *userService) DefaultCheck(ctx context.Context, uid string) (error) {
+	user, err := us.userRepository.Me(ctx, uid)
+	if err != nil {
+		return errors.New("failed to get user")
+	}
+
+	currPicture := user.Picture
+
+	if (currPicture == "https://storage.googleapis.com/example-bucket-test-cc-trw/default.png"){
+		return nil
+	}
+
+	return nil
 }
