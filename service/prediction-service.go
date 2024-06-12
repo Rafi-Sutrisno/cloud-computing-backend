@@ -7,6 +7,7 @@ import (
 	"mods/entity"
 	"mods/repository"
 	"mods/utils"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 
 type predictionService struct {
 	predictionRepository repository.PredictionRepository
+	diseaseRepository repository.DiseaseRepository
 }
 
 type PredictionService interface {
@@ -24,9 +26,10 @@ type PredictionService interface {
 	DeletePredictionbyId(ctx context.Context, PredictionID string, PredictLink string) ( error)
 }
 
-func NewPredictionService(pr repository.PredictionRepository) PredictionService {
+func NewPredictionService(pr repository.PredictionRepository,  dr repository.DiseaseRepository) PredictionService {
 	return &predictionService{
 		predictionRepository: pr,
+		diseaseRepository: dr,
 	}
 }
 
@@ -47,12 +50,18 @@ func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO
 		return entity.Prediction{}, err
 	}
 
+	result_int, _ := strconv.ParseUint(result, 10, 64)
+
+	var prediksi entity.Disease 
+
+	prediksi, _ = ps.diseaseRepository.GetDiseaseByID(ctx, result_int)
+
 	link := "https://storage.googleapis.com/example-bucket-test-cc-trw/" + img_uuid
 
 	newPrediction := entity.Prediction{
 		Pr_ID:          id,
 		Gambar:         link,
-		Hasil_Prediksi: result,
+		Hasil_Prediksi: prediksi.Name,
 		Tgl:            time.Now(),
 		UserID:         userID,
 	}
