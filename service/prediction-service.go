@@ -7,6 +7,7 @@ import (
 	"mods/entity"
 	"mods/repository"
 	"mods/utils"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -38,7 +39,10 @@ func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO
 		return entity.Prediction{}, err
 	}
 
-	result, err := utils.PredictionAPI(img_uuid)
+	temp := strings.Split(img_uuid, "/")
+	img_name := temp[len(temp)-1]
+
+	result, err := utils.PredictionAPI(img_name)
 	if err != nil {
 		return entity.Prediction{}, err
 	}
