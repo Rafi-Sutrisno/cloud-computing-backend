@@ -33,7 +33,7 @@ func main() {
 	diseaseController := controller.NewDiseaseController(diseaseService, jwtService)
 
 	predictionRepository := repository.NewPredictionRepository(db)
-	predictionService := service.NewPredictionService(predictionRepository)
+	predictionService := service.NewPredictionService(predictionRepository, diseaseRepository)
 	predictionController := controller.NewPredictionController(predictionService, jwtService)
 
 	chatroomRepository := repository.NewChatroomRepository(db)
