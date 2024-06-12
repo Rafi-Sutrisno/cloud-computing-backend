@@ -6,12 +6,13 @@ import (
 	"log"
 
 	"cloud.google.com/go/storage"
+	"google.golang.org/api/option"
 )
 
 func DeleteFromBucket(folderPath string, fileName string) error {
 	ctx := context.Background()
-	
-	client, err := storage.NewClient(ctx)
+	serviceAccountKeyFile := "../bangkit-cloud-computing-2af7d72444a8.json"
+	client, err := storage.NewClient(ctx, option.WithCredentialsFile(serviceAccountKeyFile))
 	if err != nil {
 		return fmt.Errorf("storage.NewClient: %v", err)
 	}

@@ -11,12 +11,13 @@ import (
 
 	"cloud.google.com/go/storage"
 	"github.com/google/uuid"
+	"google.golang.org/api/option"
 )
 
 func UploadToBucket(file *multipart.FileHeader, folder string) (string, error) {
 	ctx := context.Background()
-	
-	client, err := storage.NewClient(ctx)
+	serviceAccountKeyFile := "../bangkit-cloud-computing-2af7d72444a8.json"
+	client, err := storage.NewClient(ctx, option.WithCredentialsFile(serviceAccountKeyFile))
 	if err != nil {
 		return "", fmt.Errorf("storage.NewClient: %v", err)
 	}
