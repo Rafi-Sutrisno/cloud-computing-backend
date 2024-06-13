@@ -25,7 +25,7 @@ type DiseaseController interface {
 	AddDisease(ctx *gin.Context)
 	GetAllDisease(ctx *gin.Context)
 	DeleteDisease(ctx *gin.Context)
-	DiseaseByID(ctx *gin.Context)
+	GetDiseaseByID(ctx *gin.Context)
 }
 
 func NewDiseaseController(ds service.DiseaseService, jwt service.JWTService) DiseaseController {
@@ -90,7 +90,7 @@ func (dc *diseaseController) DeleteDisease(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (dc *diseaseController) DiseaseByID(ctx *gin.Context) {
+func (dc *diseaseController) GetDiseaseByID(ctx *gin.Context) {
 	diseaseID, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {
 		response := utils.BuildErrorResponse("gagal memproses request", http.StatusBadRequest)

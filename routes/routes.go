@@ -32,7 +32,7 @@ func Routes(router *gin.Engine, userController controller.UserController, diseas
 		diseasePublic.POST("/add", diseaseController.AddDisease)
 		diseasePublic.GET("", diseaseController.GetAllDisease)
 		diseasePublic.DELETE("/:id", diseaseController.DeleteDisease)
-		diseasePublic.GET("/:id", diseaseController.DiseaseByID)
+		diseasePublic.GET("/:id", diseaseController.GetDiseaseByID)
 	}
 
 	predictionPublic := router.Group("/prediction").Use(middleware.Authenticate())

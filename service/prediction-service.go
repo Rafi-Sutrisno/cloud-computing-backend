@@ -64,6 +64,7 @@ func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO
 		Hasil_Prediksi: prediksi.Name,
 		Tgl:            time.Now(),
 		UserID:         userID,
+		DiseaseID: 		result_int,
 	}
 
 	return ps.predictionRepository.AddPrediction(ctx, newPrediction)
