@@ -54,7 +54,7 @@ func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO
 
 	var prediksi entity.Disease 
 
-	prediksi, _ = ps.diseaseRepository.GetDiseaseByID(ctx, result_int)
+	prediksi, _ = ps.diseaseRepository.GetDiseaseByID(ctx, result_int+1)
 
 	link := "https://storage.googleapis.com/example-bucket-test-cc-trw/" + img_uuid
 
@@ -64,7 +64,7 @@ func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO
 		Hasil_Prediksi: prediksi.Name,
 		Tgl:            time.Now(),
 		UserID:         userID,
-		DiseaseID: 		result_int,
+		DiseaseID: 		result_int+1,
 	}
 
 	return ps.predictionRepository.AddPrediction(ctx, newPrediction)
