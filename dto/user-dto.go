@@ -12,7 +12,10 @@ type LoginDTO struct {
 	Pass  string `json:"pass" binding:"required"`
 }
 
-type UpdateUserDTO struct {
-	Name   string `json:"name" binding:"required"`
+type UpdateNameUserDTO struct {
+	Name string `json:"name" binding:"required"`
+}
+
+type UpdateNotelpUserDTO struct {
 	Notelp string `json:"notelp" binding:"required"`
 }
