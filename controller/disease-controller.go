@@ -2,7 +2,7 @@ package controller
 
 import (
 	// "encoding/json"
-	"fmt"
+
 	"mods/dto"
 	"mods/service"
 	"mods/utils"
@@ -40,10 +40,8 @@ func (dc *diseaseController) AddDisease(ctx *gin.Context) {
 	var disease dto.CreateDiseaseDTO
 	if tx := ctx.ShouldBind(&disease); tx != nil {
 
-		res2 := ctx.Request
-		fmt.Println(res2)
-
-		ctx.String(http.StatusBadRequest, "get form error %s", tx.Error())
+		res := utils.BuildErrorResponse("Failed to process request, data incomplete", http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 

@@ -27,7 +27,8 @@ type UserController interface {
 	GetAllDoctor(ctx *gin.Context)
 	DeleteUser(ctx *gin.Context)
 	UserLoginToken(ctx *gin.Context)
-	UpdateUser(ctx *gin.Context)
+	UpdateUserName(ctx *gin.Context)
+	UpdateUserNotelp(ctx *gin.Context)
 	Me(ctx *gin.Context)
 	AddDoctor(ctx *gin.Context)
 	ProfilePicture(ctx *gin.Context)
@@ -115,7 +116,7 @@ func (uc *userController) AddDoctor(ctx *gin.Context){
 		return
 	}
 
-	res := utils.BuildResponse("Success to register user", http.StatusOK, result)
+	res := utils.BuildResponse("Success to register doctor", http.StatusOK, result)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -162,7 +163,7 @@ func (uc *userController) DeleteUser(ctx *gin.Context) {
 func (uc *userController) UserLoginToken(ctx *gin.Context) {
 	var userLogin dto.LoginDTO
 	if tx := ctx.ShouldBind(&userLogin); tx != nil {
-		res := utils.BuildErrorResponse("Failed to process request", http.StatusBadRequest)
+		res := utils.BuildErrorResponse("Failed to process request, data incomplete", http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
@@ -187,8 +188,8 @@ func (uc *userController) UserLoginToken(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (uc *userController) UpdateUser(ctx *gin.Context) {
-	var updateDTO dto.UpdateUserDTO
+func (uc *userController) UpdateUserName(ctx *gin.Context) {
+	var updateDTO dto.UpdateNameUserDTO
 	if tx := ctx.ShouldBind(&updateDTO); tx != nil {
 		res := utils.BuildErrorResponse("Failed to process request", http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)
@@ -202,7 +203,33 @@ func (uc *userController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	res, err := uc.userService.UpdateUser(ctx, updateDTO, idUser)
+	res, err := uc.userService.UpdateUserName(ctx, updateDTO, idUser)
+	if err != nil {
+		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+			
+	response := utils.BuildResponse("berhasil update user", http.StatusOK, res)
+	ctx.JSON(http.StatusCreated, response)
+}
+
+func (uc *userController) UpdateUserNotelp(ctx *gin.Context) {
+	var updateDTO dto.UpdateNotelpUserDTO
+	if tx := ctx.ShouldBind(&updateDTO); tx != nil {
+		res := utils.BuildErrorResponse("Failed to process request", http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	idUser, err := uc.RetrieveID(ctx)
+	if err != nil {
+		response := utils.BuildErrorResponse("gagal memproses request", http.StatusBadRequest)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		return
+	}
+
+	res, err := uc.userService.UpdateUserNotelp(ctx, updateDTO, idUser)
 	if err != nil {
 		res := utils.BuildErrorResponse(err.Error(), http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)
