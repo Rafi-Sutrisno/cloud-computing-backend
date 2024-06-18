@@ -8,14 +8,14 @@ import (
 	"strconv"
 )
 
-func PredictionAPI(fileName string) (string, error) {
+func PredictionAPI(fileName string) (string, string, error) {
 	// Define the request body (if needed)
 	requestBody, err := json.Marshal(map[string]string{
 		"imageName": fileName,
 	})
 	if err != nil {
 		// fmt.Println("Error encoding JSON:", err)
-		return err.Error(), err
+		return err.Error(), "", err
 	}
 
 	// Define the URL of your Cloud Run service
@@ -26,7 +26,7 @@ func PredictionAPI(fileName string) (string, error) {
 	response, err := http.Post(url, "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		// fmt.Println("Error making POST request:", err)
-		return err.Error(), err
+		return err.Error(), "", err
 	}
 	defer response.Body.Close()
 
@@ -34,10 +34,11 @@ func PredictionAPI(fileName string) (string, error) {
 	var result map[string]interface{}
 	if err := json.NewDecoder(response.Body).Decode(&result); err != nil {
 		fmt.Println("Error decoding JSON response:", err)
-		return err.Error(), err
+		return err.Error(), "", err
 	}
 
 	// Print the prediction (or handle it as needed)
 	floatValue := result["prediction"].(float64)
-	return strconv.FormatFloat(floatValue, 'f', -1, 64), nil
+	floatValue2 := result["confidence"].(float64)
+	return strconv.FormatFloat(floatValue, 'f', -1, 64), strconv.FormatFloat(floatValue2, 'f', -1, 64), nil
 }

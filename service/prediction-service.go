@@ -45,16 +45,18 @@ func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO
 	temp := strings.Split(img_uuid, "/")
 	img_name := temp[len(temp)-1]
 
-	result, err := utils.PredictionAPI(img_name)
+	result, confidence, err := utils.PredictionAPI(img_name)
 	if err != nil {
 		return entity.Prediction{}, err
 	}
 
 	result_int, _ := strconv.ParseUint(result, 10, 64)
 
+	confidence_float, _ := strconv.ParseFloat(confidence, 64)
+
 	var prediksi entity.Disease 
 
-	prediksi, _ = ps.diseaseRepository.GetDiseaseByID(ctx, result_int)
+	prediksi, _ = ps.diseaseRepository.GetDiseaseByID(ctx, result_int+1)
 
 	link := "https://storage.googleapis.com/example-bucket-test-cc-trw/" + img_uuid
 
@@ -62,9 +64,10 @@ func (ps *predictionService) CreatePrediction(ctx context.Context, predictionDTO
 		Pr_ID:          id,
 		Gambar:         link,
 		Hasil_Prediksi: prediksi.Name,
+		Confidence:     confidence_float,
 		Tgl:            time.Now(),
 		UserID:         userID,
-		DiseaseID: 		result_int,
+		DiseaseID: 		result_int+1,
 	}
 
 	return ps.predictionRepository.AddPrediction(ctx, newPrediction)
