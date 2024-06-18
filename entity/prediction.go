@@ -12,5 +12,4 @@ type Prediction struct {
 	DiseaseID 	   uint64    `gorm:"foreignKey" json:"disease_id"`
 
 	User           *User     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user,omitempty"`
-	Disease        *Disease  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"disease,omitempty"`
 }
