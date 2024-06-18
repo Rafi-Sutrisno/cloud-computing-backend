@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"mods/entity"
 
 	"gorm.io/gorm"
@@ -54,7 +55,14 @@ func (pc *predictionConnection) GetPredictionByPredictionID(ctx context.Context,
 func (pc *predictionConnection) DeletePredictionbyId(ctx context.Context, PredicitonID string) ( error) {
 	var prediction entity.Prediction
 
-	if err := pc.connection.Where("pr_id = ?", PredicitonID).Delete(&prediction).Error; err != nil {
+	tx := pc.connection.Where("pr_id = ?", PredicitonID).Delete(&prediction)
+
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	if tx.RowsAffected == 0 {
+		err := fmt.Errorf("no record found with id: %v", PredicitonID)
 		return err
 	}
 

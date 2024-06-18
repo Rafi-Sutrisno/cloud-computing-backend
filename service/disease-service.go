@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"mods/dto"
 	"mods/entity"
 	"mods/repository"
@@ -42,7 +41,6 @@ func (ds *diseaseService) GetAllDisease(ctx context.Context) ([]entity.Disease, 
 }
 
 func (ds *diseaseService) DeleteDisease(ctx context.Context, id uint64) error {
-	fmt.Println("service")
 	return ds.diseaseRepository.DeleteDisease(ctx, id)
 }
 

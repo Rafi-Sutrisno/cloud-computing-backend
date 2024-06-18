@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"mods/dto"
 	"mods/entity"
 
@@ -75,10 +76,15 @@ func (db *userConnection) GetAllDoctor(ctx context.Context) ([]entity.User, erro
 
 func (db *userConnection) DeleteUser(ctx context.Context, id string) error {
 	var user entity.User
-	tx := db.connection.Where("U_Id = ?", id).Delete(&user)
+	tx := db.connection.Where("u_id = ?", id).Delete(&user)
 
 	if tx.Error != nil {
 		return tx.Error
+	}
+
+	if tx.RowsAffected == 0 {
+		err := fmt.Errorf("no record found with id: %v", id)
+		return err
 	}
 
 	return nil
