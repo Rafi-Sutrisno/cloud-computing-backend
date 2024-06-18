@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"mods/entity"
 
 	"gorm.io/gorm"
@@ -51,6 +52,11 @@ func (db *diseaseConnection) DeleteDisease(ctx context.Context, id uint64) error
 
 	if tx.Error != nil {
 		return tx.Error
+	}
+
+	if tx.RowsAffected == 0 {
+		err := fmt.Errorf("no record found with id: %v", id)
+		return err
 	}
 
 	return nil

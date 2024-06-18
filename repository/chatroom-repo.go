@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"mods/entity"
 
 	"gorm.io/gorm"
@@ -40,6 +41,11 @@ func (db *chatroomConnection) RemoveChatroom(ctx context.Context, id uint64) err
 
 	if tx.Error != nil {
 		return tx.Error
+	}
+
+	if tx.RowsAffected == 0 {
+		err := fmt.Errorf("no record found with id: %v", id)
+		return err
 	}
 
 	return nil
