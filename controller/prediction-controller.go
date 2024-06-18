@@ -104,8 +104,8 @@ func (pc *predictionController) GetPredictionByPredictionID(ctx *gin.Context) {
 }
 
 func (pc *predictionController) DeletePredictionbyId(ctx *gin.Context) {
-	predictId := ctx.Param("p_id")
-	predictLink := ctx.Param("p_link")
+	predictId := ctx.Query("p_id")
+	predictLink := ctx.Query("p_link")
 	
 	err := pc.predictionService.DeletePredictionbyId(ctx, predictId, predictLink)
 	if err != nil {
