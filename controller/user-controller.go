@@ -9,9 +9,6 @@ import (
 	"net/http"
 	"strings"
 
-	// "os/exec"
-	// "strconv"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -116,7 +113,7 @@ func (uc *userController) AddDoctor(ctx *gin.Context){
 		return
 	}
 
-	res := utils.BuildResponse("Success to register user", http.StatusOK, result)
+	res := utils.BuildResponse("Success to register doctor", http.StatusOK, result)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -163,7 +160,7 @@ func (uc *userController) DeleteUser(ctx *gin.Context) {
 func (uc *userController) UserLoginToken(ctx *gin.Context) {
 	var userLogin dto.LoginDTO
 	if tx := ctx.ShouldBind(&userLogin); tx != nil {
-		res := utils.BuildErrorResponse("Failed to process request", http.StatusBadRequest)
+		res := utils.BuildErrorResponse("Failed to process request, data incomplete", http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}

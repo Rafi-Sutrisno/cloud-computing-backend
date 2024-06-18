@@ -103,11 +103,11 @@ func (cc *chatroomController) GetChatroom(ctx *gin.Context) {
 
 	result, err := cc.chatroomService.GetChatroom(ctx.Request.Context(), id, role)
 	if err != nil {
-		res := utils.BuildErrorResponse("testing 2 Failed to get chatroom", http.StatusBadRequest)
+		res := utils.BuildErrorResponse("Failed to get chatroom", http.StatusBadRequest)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
-	res := utils.BuildResponse2("testing 3 Success to get chatroom", http.StatusOK, result, role)
+	res := utils.BuildResponse2("Success to get chatroom", http.StatusOK, result, role)
 	ctx.JSON(http.StatusOK, res)
 }
