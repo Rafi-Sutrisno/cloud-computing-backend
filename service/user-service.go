@@ -25,7 +25,8 @@ type UserService interface {
 	IsDuplicateEmail(ctx context.Context, email string) (bool, error)
 	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
 	VerifyCredential(ctx context.Context, email string, pass string) (bool, error)
-	UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error)
+	UpdateUserName(ctx context.Context, updateDTO dto.UpdateNameUserDTO, userID string) (entity.User, error)
+	UpdateUserNotelp(ctx context.Context, updateDTO dto.UpdateNotelpUserDTO, userID string) (entity.User, error)
 	GetMe(ctx context.Context, id string) (entity.User, error)
 	AddDoctor(ctx context.Context, userDTO dto.CreateUserDTO) (entity.User, error)
 	ProfilePicture(ctx context.Context, imageDTO dto.PredictImageDTO, uid string) (string, error)
@@ -84,8 +85,12 @@ func (us *userService) DeleteUser(ctx context.Context, id string) error {
 	return us.userRepository.DeleteUser(ctx, id)
 }
 
-func (us *userService) UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error) {
-	return us.userRepository.UpdateUser(ctx, updateDTO, userID)
+func (us *userService) UpdateUserName(ctx context.Context, updateDTO dto.UpdateNameUserDTO, userID string) (entity.User, error) {
+	return us.userRepository.UpdateUserName(ctx, updateDTO, userID)
+}
+
+func (us *userService) UpdateUserNotelp(ctx context.Context, updateDTO dto.UpdateNotelpUserDTO, userID string) (entity.User, error) {
+	return us.userRepository.UpdateUserNotelp(ctx, updateDTO, userID)
 }
 
 func (us *userService) VerifyCredential(ctx context.Context, email string, pass string) (bool, error) {
