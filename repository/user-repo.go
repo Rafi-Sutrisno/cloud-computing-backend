@@ -20,7 +20,8 @@ type UserRepository interface {
 	GetAllDoctor(ctx context.Context) ([]entity.User, error)
 	DeleteUser(ctx context.Context, id string) error
 	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
-	UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error)
+	UpdateUserName(ctx context.Context, updateDTO dto.UpdateNameUserDTO, userID string) (entity.User, error)
+	UpdateUserNotelp(ctx context.Context, updateDTO dto.UpdateNotelpUserDTO, userID string) (entity.User, error)
 	Me(ctx context.Context, id string) (entity.User, error)
 	ProfilePicture(ctx context.Context, link string, uid string) (string, error)
 }
@@ -83,7 +84,7 @@ func (db *userConnection) DeleteUser(ctx context.Context, id string) error {
 	return nil
 }
 
-func (uc *userConnection) UpdateUser(ctx context.Context, updateDTO dto.UpdateUserDTO, userID string) (entity.User, error) {
+func (uc *userConnection) UpdateUserName(ctx context.Context, updateDTO dto.UpdateNameUserDTO, userID string) (entity.User, error) {
 	var user entity.User
 
 	getUser := uc.connection.Where("u_id = ?", userID).Take(&user)
@@ -91,7 +92,22 @@ func (uc *userConnection) UpdateUser(ctx context.Context, updateDTO dto.UpdateUs
 		return entity.User{}, errors.New("invalid user id")
 	}
 
-	if tx := uc.connection.Model(&user).Updates(map[string]interface{}{"name": updateDTO.Name, "notelp": updateDTO.Notelp}).Error; tx != nil {
+	if tx := uc.connection.Model(&user).Update("name", updateDTO.Name).Error; tx != nil {
+		return entity.User{}, tx
+	}
+
+	return user, nil
+}
+
+func (uc *userConnection) UpdateUserNotelp(ctx context.Context, updateDTO dto.UpdateNotelpUserDTO, userID string) (entity.User, error) {
+	var user entity.User
+
+	getUser := uc.connection.Where("u_id = ?", userID).Take(&user)
+	if getUser.Error != nil {
+		return entity.User{}, errors.New("invalid user id")
+	}
+
+	if tx := uc.connection.Model(&user).Update("notelp", updateDTO.Notelp).Error; tx != nil {
 		return entity.User{}, tx
 	}
 
